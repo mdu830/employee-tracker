@@ -119,26 +119,33 @@ const addEmployee = () => {
             const query = 'SELECT * FROM role'
             // select all records from role and use all records to prompt from role choice
 
-            inquirer.prompt([
-                {
-                    name: 'role',
-                    type: 'list',
-                    message: 'What role do you want for this employee?',
-                    choices: [{name: 'Sales Lead', id: 1}, {name: 'Sales Person', id: 2}, {name: 'Lead Engineer', id: 3}, {name: 'Software Engineer', id: 4}, {name: 'Account Manager', id: 5}, {name: 'Accountant', id: 6}, {name:'Legal Team Lead', id: 7}, {name: 'Lawyer', id: 8}]
-                }
-            ]).then((answer) => {
-
-                const query = 'SELECT * FROM employees.employee; SELECT first_name, last_name, role_id, manager_id FROM employees.employee WHERE manager_id IS NOT NULL'
+            db.query(query, (err, data) => {
+                if(err) throw err; 
 
                 inquirer.prompt([
                     {
-                        name: 'manager',
+                        name: 'role',
                         type: 'list',
-                        message: 'Who is the manager of this employee?',
-                        choices: [{name: 'Mike Chan', id: 1}, {name: 'Kevin Tupik', id: 3}, {name: 'Malia Brown', id: 5}, {name: 'Tom Allen', id: 7}]
+                        message: 'What role do you want for this employee?',
+                        choices: [{name: 'Sales Lead', id: 1}, {name: 'Sales Person', id: 2}, {name: 'Lead Engineer', id: 3}, {name: 'Software Engineer', id: 4}, {name: 'Account Manager', id: 5}, {name: 'Accountant', id: 6}, {name:'Legal Team Lead', id: 7}, {name: 'Lawyer', id: 8}]
                     }
-                ])
-            })
+                ]).then((answer) => {
+
+                    const query = 'SELECT * FROM employees.employee; SELECT first_name, last_name, role_id, manager_id FROM employees.employee WHERE manager_id IS NOT NULL'
+
+                    db.query(query, (err, data) => {
+                        if(err) throw err;
+                        inquirer.prompt([
+                            {
+                                name: 'manager',
+                                type: 'list',
+                                message: 'Who is the manager of this employee?',
+                                choices: [{name: 'Mike Chan', id: 1}, {name: 'Kevin Tupik', id: 3}, {name: 'Malia Brown', id: 5}, {name: 'Tom Allen', id: 7}]
+                            }
+                        ])
+                    });
+                })
+            });
             // console.table(data);
             // start();
         });
