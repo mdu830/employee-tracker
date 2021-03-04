@@ -127,11 +127,14 @@ const addEmployee = () => {
                         name: 'role',
                         type: 'list',
                         message: 'What role do you want for this employee?',
-                        choices: [{name: 'Sales Lead', id: 1}, {name: 'Sales Person', id: 2}, {name: 'Lead Engineer', id: 3}, {name: 'Software Engineer', id: 4}, {name: 'Account Manager', id: 5}, {name: 'Accountant', id: 6}, {name:'Legal Team Lead', id: 7}, {name: 'Lawyer', id: 8}]
+                        choices: function () {
+                            let choiceArray = results[0].map(choice => choice.title);
+                            return choiceArray;
+                        }
                     }
                 ]).then((answer) => {
 
-                    const query = 'SELECT * FROM employees.employee; SELECT first_name, last_name, role_id, manager_id FROM employees.employee WHERE manager_id IS NOT NULL'
+                    const query = 'SELECT first_name, last_name, role_id, manager_id FROM employees.employee WHERE manager_id IS NOT NULL'
 
                     db.query(query, (err, data) => {
                         if(err) throw err;
@@ -142,7 +145,11 @@ const addEmployee = () => {
                                 message: 'Who is the manager of this employee?',
                                 choices: [{name: 'Mike Chan', id: 1}, {name: 'Kevin Tupik', id: 3}, {name: 'Malia Brown', id: 5}, {name: 'Tom Allen', id: 7}]
                             }
-                        ])
+                        ]).then((answer) =>{
+                            db.query(
+                                'INSERT INTO employees(first_name, last_name, role_id, manager_id) VALUES(?, ?, (SELECT id FROM roles WHERE title = ? ), (SELECT id FROM (SELECT id FROM employees WHERE CONCAT(first_name," ",last_name) = ? ) AS tmptable)),' [answer.firstName, answer.lastName, answer.role, answer.manager]
+                            )
+                        });
                     });
                 })
             });
