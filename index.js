@@ -131,6 +131,7 @@ const addEmployee = () => {
                             let choiceArray = results[0].map(choice => choice.title);
                             return choiceArray;
                         }
+                        // [{name: 'Sales Lead', id: 1}, {name: 'Sales Person', id: 2}, {name: 'Lead Engineer', id: 3}, {name: 'Software Engineer', id: 4}, {name: 'Account Manager', id: 5}, {name: 'Accountant', id: 6}, {name:'Legal Team Lead', id: 7}, {name: 'Lawyer', id: 8}]
                     }
                 ]).then((answer) => {
 
