@@ -20,7 +20,7 @@ figlet('Employee Tracker', function(err, data) {
         return;
     }
     console.log(data)
-    start()
+    start();
 });
 
 
@@ -31,7 +31,7 @@ function start() {
         {
             type: "list",
             message: "What would you like to do?",
-            choices: ['View All Employees', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Departments', 'Add Department', 'View All Roles', 'Add Role', 'Remove Role', 'Exit'],
+            choices: ['View All Employees', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Departments', 'Add Department', 'View All Roles', 'Add Role', 'Remove Role', 'View Employees by Manager', 'Exit'],
             name: "mainMenu"
         }
     ];
@@ -69,12 +69,12 @@ function start() {
             case 'Remove Role':
                 removeRole();
                 break
+            case 'View Employees by Manager':
+                viewEmpByManager();
+                break
             case 'Exit':
                 return
                 break
-            // case 'View All Employees By Department':
-            //     viewEmployeesByDep();
-            //     break;
             // case 'View All Employees By Manager':
             //     viewEmpByManager();
             //     break; 
@@ -175,7 +175,6 @@ const addEmployee = () => {
                     }
                 )
                 // console.log(statement.sql);
-
             })
      
 
@@ -310,30 +309,16 @@ const addRole = () => {
     });
 };
 
+const viewEmpByManager = () => {
+    const query = `select employee.id, employee.first_name, employee.last_name, role.title, department.name as department, employee.manager_id, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id WHERE employee.manager_id IS NOT NULL`
 
+    db.query(query, (err, data) => {
+        if(err) throw err;
 
-
-// const viewEmployeesByDep = () => {
-//     const query = "select * from employee";
-
-//     db.query(query, (err, data) => {
-//         if(err) throw err;
-
-//         printTable(data);
-//         start();
-//     });
-// }
-
-// const viewEmpByManager = () => {
-//     const query = 
-
-//     db.query(query, (err, data) => {
-//         if(err) throw err;
-
-//         printTable(data);
-//         start();
-//     });
-// }
+        printTable(data);
+        start();
+    });
+}
 
 // const removeEmployee = () => {
 
@@ -346,4 +331,7 @@ const addRole = () => {
 // const removeRole = () => {
 
 // }
-figlet();
+
+// figlet();
+// start();
+
