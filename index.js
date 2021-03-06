@@ -31,7 +31,7 @@ function start() {
         {
             type: "list",
             message: "What would you like to do?",
-            choices: ['View All Employees', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Departments', 'Add Department', 'View All Roles', 'Add Role', 'Remove Role', 'View Employees by Manager', 'Exit'],
+            choices: ['View All Employees', 'View All Departments', 'View All Roles', 'View Employees by Manager', 'Add Employee', 'Add Department', 'Add Role', 'Update Employee Role', 'Update Employee Manager', 'Remove Employee', 'Remove Role', 'Remove Department', 'Exit'],
             name: "mainMenu"
         }
     ];
@@ -73,11 +73,8 @@ function start() {
                 viewEmpByManager();
                 break
             case 'Exit':
-                return
+                db.end();
                 break
-            // case 'View All Employees By Manager':
-            //     viewEmpByManager();
-            //     break; 
         }
     })
 };
@@ -320,18 +317,41 @@ const viewEmpByManager = () => {
     });
 }
 
-// const removeEmployee = () => {
-
-// }
-
 // const updateEmpManager = () => {
 
 // }
+
+const removeEmployee = () => {
+    const query = `select employee.id, employee.first_name, employee.last_name, role.title, department.name as department, role.salary, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id;`
+
+    db.query(query, (err, empData) => {
+        if(err) throw err;
+
+        inquirer.prompt([
+            {
+                name: 'removeEmp',
+                type: 'list',
+                message: 'Which employee would you like to remove?',
+                choices: () => {
+                    let choiceArray = empData.map(choices => {
+                        return {
+                            name: choices.name,
+                            value: choices.id
+                        }});
+                    return choiceArray;
+                }
+            }
+        ])
+        start();
+    });
+}
 
 // const removeRole = () => {
 
 // }
 
-// figlet();
-// start();
+// const removeDepartment = () => {
+
+// }
+
 
