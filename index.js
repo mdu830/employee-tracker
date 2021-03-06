@@ -12,7 +12,7 @@ const db = mysql.createConnection({
     database: "employees"
 });
 
-
+// GUI
 figlet('Employee Tracker', function(err, data) {
     if (err) {
         console.log('Something went wrong...');
@@ -23,15 +23,14 @@ figlet('Employee Tracker', function(err, data) {
     start();
 });
 
-
+// start the application
 function start() {
     
-    // inquirer prompts
     const question = [ 
         {
             type: "list",
             message: "What would you like to do?",
-            choices: ['View All Employees', 'View All Departments', 'View All Roles', 'View Employees by Manager', 'Add Employee', 'Add Department', 'Add Role', 'Update Employee Role', 'Update Employee Manager', 'Remove Employee', 'Remove Role', 'Remove Department', 'Exit'],
+            choices: ['View All Employees', 'View All Departments', 'View All Roles', 'View Employees by Manager', 'Add Employee', 'Add Department', 'Add Role', 'Update Employee Role', 'Remove Employee', 'Remove Role', 'Remove Department', 'Exit'],
             name: "mainMenu"
         }
     ];
@@ -211,11 +210,11 @@ const addDepartment = () => {
 }
 
 const updateEmpRole = () => {
-    const employeeQuery = `SELECT id, concat(first_name, " ", last_name) as full_name FROM employees.employee`
+    const allEmpQuery = `SELECT id, concat(first_name, " ", last_name) as full_name FROM employees.employee`
 
     const roleQuery = `SELECT id, title FROM employees.role;`
 
-    db.query(employeeQuery, (err, empData) => {
+    db.query(allEmpQuery, (err, empData) => {
         if(err) throw err;
 
         db.query(roleQuery, (err, roleData) => {
@@ -319,8 +318,59 @@ const viewEmpByManager = () => {
         start();
     });
 }
+// This function is not finished
 
 // const updateEmpManager = () => {
+//     const allEmpQuery = `SELECT id, concat(first_name, " ", last_name) as full_name FROM employees.employee`
+
+//     const managerOfQuery = `select employee.id, concat(employee.first_name, " ", employee.last_name) as full_name, role.title, department.name as department, role.salary, employee.manager_id, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id WHERE employee.manager_id IS NULL`
+
+//     db.query(allEmpQuery, (err, empData) => {
+//         if(err) throw err;
+
+//         db.query(managerOfQuery, (err, managerData) => {
+//             if(err) throw err;
+
+//             inquirer.prompt([
+//                 {
+//                     name: 'whichEmp',
+//                     type: 'list',
+//                     message: 'choose an employee that you would like to select as a manager',
+//                     choices: () => {
+//                         let choiceArray = empData.map(choices => {
+//                             return {
+//                                 name: choices.full_name,
+//                                 value: choices.id
+//                             }});
+//                             return choiceArray
+                            
+//                     }
+//                 },
+//                 {
+//                     name: 'whichIncharge',
+//                     type: 'list',
+//                     message: 'Choose which employee this manager will be in charger of',
+//                     choices: () => {
+//                         let choiceArray = managerData.map(choices => {
+//                             return {
+//                                 name: choices.full_name,
+//                                 value: choices.id
+//                             }});
+//                             return choiceArray
+                            
+//                     }
+                    
+//                 }
+//             ]).then((answer) => {
+//                 const statement = db.query(
+//                     `UPDATE employee.${answer.whichEmp};`, (err, data) => {
+//                         console.log("employee manager updated!")
+//                         start()
+//                     }
+//                 )
+//             })
+//         });
+//     })
 
 // }
 
