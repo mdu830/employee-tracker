@@ -69,6 +69,9 @@ function start() {
             case 'Remove Role':
                 removeRole();
                 break
+            case 'Remove Department':
+                removeDepartment();
+                break
             case 'View Employees by Manager':
                 viewEmpByManager();
                 break
@@ -350,16 +353,71 @@ const removeEmployee = () => {
             )
             // console.log(statement)
         })
-        start();
     });
 }
 
-// const removeRole = () => {
+const removeRole = () => {
+    const query = `SELECT role.id, role.title FROM employees.role;`
 
-// }
+    db.query(query, (err, roleData) => {
+        if(err) throw err;
 
-// const removeDepartment = () => {
+        inquirer.prompt([
+            {
+                name: 'removeRole',
+                type: 'list',
+                message: 'Which role would you like to remove?',
+                choices: () => {
+                    let choiceArray = roleData.map(choices => {
+                        return {
+                            name: choices.title,
+                            value: choices.id
+                        }});
+                    return choiceArray;
+                }
+            }
+        ]).then((answer) =>{
+            const statement = db.query(
+                `DELETE from employees.role WHERE id = ${answer.removeRole}`, (err, data) => {
+                    console.log("Role removed!")
+                    start();
+                }
+            )
+            // console.log(statement)
+        })
+    });
+}
 
-// }
+const removeDepartment = () => {
+    const query = `SELECT * FROM employees.department;`
+
+    db.query(query, (err, depData) => {
+        if(err) throw err;
+
+        inquirer.prompt([
+            {
+                name: 'removeDep',
+                type: 'list',
+                message: 'Which department would you like to remove?',
+                choices: () => {
+                    let choiceArray = depData.map(choices => {
+                        return {
+                            name: choices.name,
+                            value: choices.id
+                        }});
+                    return choiceArray;
+                }
+            }
+        ]).then((answer) =>{
+            const statement = db.query(
+                `DELETE from employees.department WHERE id = ${answer.removeDep}`, (err, data) => {
+                    console.log("Department removed!")
+                    start();
+                }
+            )
+            // console.log(statement)
+        })
+    });
+}
 
 
