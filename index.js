@@ -12,14 +12,26 @@ const db = mysql.createConnection({
     database: "employees"
 });
 
+
+figlet('Employee Tracker', function(err, data) {
+    if (err) {
+        console.log('Something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(data)
+    start()
+});
+
+
 function start() {
-    // add figlet here
+    
     // inquirer prompts
     const question = [ 
         {
             type: "list",
             message: "What would you like to do?",
-            choices: ['View All Employees', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Departments', 'Add Department', 'View All Roles', 'Add Role', 'Remove Role'],
+            choices: ['View All Employees', 'Add Employee', 'Remove Employee', 'Update Employee Role', 'Update Employee Manager', 'View All Departments', 'Add Department', 'View All Roles', 'Add Role', 'Remove Role', 'Exit'],
             name: "mainMenu"
         }
     ];
@@ -57,6 +69,9 @@ function start() {
             case 'Remove Role':
                 removeRole();
                 break
+            case 'Exit':
+                return
+                break
             // case 'View All Employees By Department':
             //     viewEmployeesByDep();
             //     break;
@@ -84,7 +99,7 @@ const viewAllRoles = () => {
     db.query(query, (err, data) => {
         if(err) throw err;
 
-        console.table(data);
+        printTable(data);
         start();
     });
 };
@@ -95,7 +110,7 @@ const viewAlldepartments = () => {
     db.query(query, (err, data) => {
         if(err) throw err;
 
-        console.table(data);
+        printTable(data);
         start();
     });
 };
@@ -304,7 +319,7 @@ const addRole = () => {
 //     db.query(query, (err, data) => {
 //         if(err) throw err;
 
-//         console.table(data);
+//         printTable(data);
 //         start();
 //     });
 // }
@@ -315,7 +330,7 @@ const addRole = () => {
 //     db.query(query, (err, data) => {
 //         if(err) throw err;
 
-//         console.table(data);
+//         printTable(data);
 //         start();
 //     });
 // }
@@ -331,5 +346,4 @@ const addRole = () => {
 // const removeRole = () => {
 
 // }
-
-start();
+figlet();
