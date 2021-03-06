@@ -51,9 +51,9 @@ function start() {
             case 'Update Employee Role':
                 updateEmpRole();
                 break
-            case 'Update Employee Manager':
-                updateEmpManager();
-                break
+            // case 'Update Employee Manager':
+            //     updateEmpManager();
+            //     break
             case 'View All Departments':
                 viewAlldepartments();
                 break
@@ -322,7 +322,7 @@ const viewEmpByManager = () => {
 // }
 
 const removeEmployee = () => {
-    const query = `select employee.id, employee.first_name, employee.last_name, role.title, department.name as department, role.salary, concat(manager.first_name, ' ', manager.last_name) as manager from employee left join role on employee.role_id = role.id left join department on role.department_id = department.id left join employee manager on manager.id = employee.manager_id;`
+    const query = `SELECT id, concat(first_name, " ", last_name) as full_name FROM employees.employee;`
 
     db.query(query, (err, empData) => {
         if(err) throw err;
@@ -335,13 +335,21 @@ const removeEmployee = () => {
                 choices: () => {
                     let choiceArray = empData.map(choices => {
                         return {
-                            name: choices.name,
+                            name: choices.full_name,
                             value: choices.id
                         }});
                     return choiceArray;
                 }
             }
-        ])
+        ]).then((answer) =>{
+            const statement = db.query(
+                `DELETE from employees.employee WHERE id = ${answer.removeEmp}`, (err, data) => {
+                    console.log("Employee removed!")
+                    start();
+                }
+            )
+            // console.log(statement)
+        })
         start();
     });
 }
