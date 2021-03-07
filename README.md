@@ -27,6 +27,10 @@
 <ul>
     First run the schema.sql and seed.sql on mySQL workbench then (inside the employee-tracker directory) type 'node tracker' to run the application.
 </ul>
+<ul>
+    How to video: https://youtu.be/CXSEHoVYYO8
+</ul>
+![demo](/images/example.gif)
 
 ### License
 <ul>
