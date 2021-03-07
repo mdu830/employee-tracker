@@ -30,7 +30,7 @@
 <ul>
     How to video: https://youtu.be/CXSEHoVYYO8
 </ul>
-![demo](/images/example.gif)
+![demo](/image/example.gif)
 
 ### License
 <ul>
